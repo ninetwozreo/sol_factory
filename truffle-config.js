@@ -23,6 +23,7 @@
 // const fs = require('fs');
 // const mnemonic = fs.readFileSync(".secret").toString().trim();
 
+
 module.exports = {
   /**
    * Networks define how you connect to your ethereum client and let you set the
@@ -35,6 +36,31 @@ module.exports = {
    */
 
   networks: {
+      //开发测试网络
+      development: {
+        host: "127.0.0.1",
+        port: 8545,
+        network_id: "*"
+      },
+      // ropsten测试网络，mnemonic为账户的助记词或者私钥
+      ropsten: {
+        provider: () => new HDWalletProvider(mnemonic, `https://ropsten.infura.io/v3/YOUR-PROJECT-ID`),
+        network_id: 3,       // Ropsten's id
+        gas: 5500000,        // Ropsten has a lower block limit than mainnet
+        confirmations: 2,    // # of confs to wait between deployments. (default: 0)
+        timeoutBlocks: 200,  // # of blocks before a deployment times out  (minimum/default: 50)
+        skipDryRun: true     // Skip dry run before migrations? (default: false for public nets )
+      },
+      //主网
+      advanced: {
+        provider: () => new HDWalletProvider(mnemonic, `https://mainnet.infura.io`),
+        network_id: 1,       // Custom network
+        gas: 8500000,           // Gas sent with each transaction (default: ~6700000)
+        gasPrice: 20000000000,  // 20 gwei (in wei) (default: 100 gwei)
+        from: <address>,        // Account to send txs from (default: accounts[0])
+        websockets: true        // Enable EventEmitter interface for web3 (default: false)
+      },
+
     // Useful for testing. The `development` name is special - truffle uses it by default
     // if it's defined here and no other network is specified at the command line.
     // You should run a client (like ganache-cli, geth or parity) in a separate terminal
