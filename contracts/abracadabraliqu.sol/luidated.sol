@@ -12,21 +12,27 @@ pragma experimental ABIEncoderV2;
 
 contract  abracsolent {
     // using RebaseLibrary for Rebase;
-    ICauldronV2 cadv2 =ICauldronV2(0x390Db10e65b5ab920C19149C919D970ad9d18A41);
-    IBentoBoxV1 bentoBox=IBentoBoxV1(0xd96f48665a1410C0cd669A88898ecA36B9Fc2cce);
+    //=ICauldronV2(0x390Db10e65b5ab920C19149C919D970ad9d18A41)
+    ICauldronV2 cadv2 ;
+    IBentoBoxV1 bentoBox;
     uint256 private constant EXCHANGE_RATE_PRECISION = 1e18;
     uint256 private constant COLLATERIZATION_RATE_PRECISION = 1e5;
-    uint256 private constant COLLATERIZATION_RATE = 75000;
+    uint256 private constant COLLATERIZATION_RATE = 90000;
     
 // function view_user() public view  returns (address[] memory) {
 
-    function filter(address[] calldata userr, uint256 _exchangeRate,uint128 elastic,uint128 base) public view  returns (address[] memory) {
+    function setup(address can,address bento) external{
+        cadv2 =ICauldronV2(can);
+        bentoBox==IBentoBoxV1(bento);
+    }
+
+    function filter(address[] calldata userr, uint256 _exchangeRate,uint128 elastic,uint128 base,uint256 c_rate) public view  returns (address[] memory) {
         address[] memory users=userr;
         // address[] res;
 
         for (uint256 i = 0; i < users.length; i++) {
                 address user=users[i];
-            if(_isSolvent(user,_exchangeRate,elastic,base)){
+            if(_isSolvent(user,_exchangeRate,elastic,base,c_rate)){
                 delete users[i];
                 // users.length--;
                 // res.push()
@@ -35,7 +41,7 @@ contract  abracsolent {
 
         return users;
     }
-function _isSolvent(address user, uint256 _exchangeRate,uint128 elastic,uint128 base) internal view returns (bool) {
+function _isSolvent(address user, uint256 _exchangeRate,uint128 elastic,uint128 base,uint256 c_rate) internal view returns (bool) {
         // accrue must have already been called!
         uint256 borrowPart =cadv2.userBorrowPart(user);
         if (borrowPart == 0) return true;
@@ -45,7 +51,7 @@ function _isSolvent(address user, uint256 _exchangeRate,uint128 elastic,uint128 
         return
             bentoBox.toAmount(
                 IERC20(0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2),
-                collateralShare*(EXCHANGE_RATE_PRECISION *COLLATERIZATION_RATE/ COLLATERIZATION_RATE_PRECISION),
+                collateralShare*(EXCHANGE_RATE_PRECISION *c_rate/COLLATERIZATION_RATE_PRECISION),
                 false
             ) >=
             // Moved exchangeRate here instead of dividing the other side to preserve more precision
