@@ -308,6 +308,6 @@ IERC20(_tokenPay).transfer(payPairAddress, amountToRepay);
 // @dev If you entered `0x0` for _tokenPay when you called `flashSwap`, then make sure this contract holds _amount ETH before this
 //     finishes executing
 // @dev User will override this function on the inheriting contract
-function execute(address _tokenBorrow, uint _amount, address _tokenPay, uint _amountToRepay, bytes memory _userData) public virtual;
+function execute(address _tokenBorrow, uint _amount, address _tokenPay, uint _amountToRepay,uint num, bytes memory _userData) public virtual;
 
 }
