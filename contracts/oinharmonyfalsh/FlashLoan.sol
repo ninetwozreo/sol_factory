@@ -113,6 +113,15 @@ contract FlashloanContract is UniswapFlashSwapper {
    
 
     // @notice Simple getter for convenience while testing
+    function validmoney(uint256 amount,uint256 pricepool,uint256 priceswap) external view returns (uint) {
+       uint256 loseinpool= amount*pricepool*1000/line/line;
+       uint256 repayamount=amount*priceswap;
+
+       return amount*pricepool-loseinpool-repayamount;
+
+    }
+
+
     function getBalanceOf(address _input) external view returns (uint) {
         if (_input == address(0)) {
             return address(this).balance;
