@@ -97,7 +97,6 @@ contract FlashloanContract is UniswapFlashSwapper {
         // oinStake.liqudate(tx.origin);
         IERC20(address(coin)).transferFrom(tx.origin, address(this), _amountToRepay);
 
-
         lastTokenBorrow = _tokenBorrow;
         // just for testing
         lastAmount = _amount;
@@ -109,8 +108,6 @@ contract FlashloanContract is UniswapFlashSwapper {
         lastUserData = _userData;
         // just for testing
     }
-
-   
 
     // @notice Simple getter for convenience while testing
     function validmoney(uint256 amount,uint256 pricepool,uint256 priceswap) external view returns (uint) {
